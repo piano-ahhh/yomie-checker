@@ -3,7 +3,7 @@ import { OrderData, ColumnMapping, SheetConfig } from './types';
 export const DEFAULT_MESSAGES = {
   welcomeTh: "YOMIÉ status",
   subtitleTh: "กรอกชื่อบัญชีเพื่อเช็คประวัติการสั่งซื้อและสถานะ",
-  searchPlaceholderTh: "Account (มี @)",
+  searchPlaceholderTh: "Account",
   searchingTh: "กำลังค้นหาข้อมูล...",
   notFoundTh: "ไม่พบข้อมูลบัญชีนี้",
   notFoundSubTh: "กรุณาตรวจสอบความถูกต้องของชื่อบัญชีอีกครั้ง หรือติดต่อผู้ดูแลระบบเพื่อแจ้งปัญหานะคะ",

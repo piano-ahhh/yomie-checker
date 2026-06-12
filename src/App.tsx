@@ -239,7 +239,7 @@ export default function App() {
                 </div>
 
                 <div className="space-y-2">
-                  <h3 className="text-lg font-black text-gray-900 font-sans">ไม่พบรหัสบัญชี "@{searchQuery}"</h3>
+                  <h3 className="text-lg font-black text-gray-900 font-sans">ไม่พบรหัสบัญชี "{searchQuery}"</h3>
                   <p className="text-xs text-gray-400 font-sans leading-relaxed max-w-sm mx-auto">
                     ไม่พบข้อมูลการสั่งซื้อสินค้าพรีออเดอร์ภายใต้ชื่อบัญชีนี้ โปรดสะกดข้อความให้ถี่ถ้วนหรือลองแจ้งทางร้านตรวจสอบเลขนะคะ
                   </p>

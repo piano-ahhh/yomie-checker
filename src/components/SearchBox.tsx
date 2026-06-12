@@ -79,7 +79,7 @@ export const SearchBox: React.FC<SearchBoxProps> = ({ onSearch, isLoading, onCle
               type="text"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Account (มี @)"
+              placeholder="Account"
               disabled={isLoading}
               className={`w-full text-center block py-3.5 px-4 rounded-2xl font-sans font-medium text-base transition-all focus:ring-0 shadow-inner border-2 ${
                 query.trim() 
