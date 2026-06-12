@@ -1,0 +1,8 @@
+{
+  "name": "Remix: Order Checker",
+  "description": "ระบบเช็คสถานะการสั่งซื้อสินค้าจาก Google Sheets สำหรับลูกค้า",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
