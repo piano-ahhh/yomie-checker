@@ -24,6 +24,7 @@ export default function App() {
   
   // Matched orders for lookup
   const [matchedOrders, setMatchedOrders] = useState<OrderData[]>([]);
+  const [isSilentUpdating, setIsSilentUpdating] = useState(false);
 
   // Update clocks cleanly
   const refreshUpdateTime = () => {
@@ -31,6 +32,51 @@ export default function App() {
     const pad = (n: number) => String(n).padStart(2, '0');
     setLastUpdated(`${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`);
   };
+
+  // Background silent polling function for real-time updates
+  const pollSearchSilently = async (query: string) => {
+    if (!query || config.useFallbackSample || !config.spreadsheetId) return;
+    
+    setIsSilentUpdating(true);
+    const normalizedSearch = normalizeAccount(query);
+
+    try {
+      const queryUrl = buildQueryUrl(config.spreadsheetId, config.sheetName);
+      const res = await fetch(queryUrl);
+      if (!res.ok) {
+        throw new Error(`Google Sheets endpoint error. Status Code: ${res.status}`);
+      }
+      const text = await res.text();
+      const allRows = parseGvizData(text, config.mapping);
+      
+      const matches = allRows.filter(o => {
+        const accountMatch = o.account && normalizeAccount(o.account) === normalizedSearch;
+        const nameMatch = o.customerName && o.customerName.toLowerCase().includes(query.toLowerCase());
+        const idMatch = o.orderId && o.orderId.toLowerCase() === query.toLowerCase();
+        return accountMatch || nameMatch || idMatch;
+      });
+
+      setMatchedOrders(matches);
+      setErrorText(null); // Clear any transient network errors if sync succeeded
+      refreshUpdateTime();
+    } catch (err) {
+      console.warn("Background real-time sync failed temporarily:", err);
+    } finally {
+      setIsSilentUpdating(false);
+    }
+  };
+
+  // Real-time automatic polling effect
+  useEffect(() => {
+    if (!searchQuery || config.useFallbackSample || !config.spreadsheetId) return;
+
+    // Fast 5-second interval for responsive real-time feedback
+    const intervalId = setInterval(() => {
+      pollSearchSilently(searchQuery);
+    }, 5000);
+
+    return () => clearInterval(intervalId);
+  }, [searchQuery, config.useFallbackSample, config.spreadsheetId, config.sheetName]);
 
   // Set initial time on boot
   useEffect(() => {
@@ -259,6 +305,8 @@ export default function App() {
                 accountName={searchQuery} 
                 onBack={handleClear}
                 lastUpdatedTime={lastUpdated}
+                isRealTimeActive={!config.useFallbackSample}
+                isSyncing={isSilentUpdating}
               />
             )}
           </div>

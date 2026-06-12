@@ -7,13 +7,17 @@ interface StatusCardProps {
   accountName: string;
   onBack: () => void;
   lastUpdatedTime?: string;
+  isRealTimeActive?: boolean;
+  isSyncing?: boolean;
 }
 
 export const StatusCard: React.FC<StatusCardProps> = ({ 
   orders, 
   accountName, 
   onBack,
-  lastUpdatedTime = "01:46:55"
+  lastUpdatedTime = "01:46:55",
+  isRealTimeActive = false,
+  isSyncing = false
 }) => {
   
   // Parse numeric string values securely
@@ -77,20 +81,38 @@ export const StatusCard: React.FC<StatusCardProps> = ({
     <div className="w-full max-w-5xl mx-auto space-y-5 animate-fade-in" id="status-results-scene">
       
       {/* Top action row containing pill back button and orange update clock */}
-      <div className="flex items-center justify-between" id="status-scene-header">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3" id="status-scene-header">
         <button
           onClick={onBack}
-          className="flex items-center justify-start space-x-2 bg-[#db5984] hover:bg-[#c2466f] text-white font-bold py-2 px-4 rounded-xl shadow-sm hover:shadow transition-all text-xs sm:text-xs cursor-pointer active:scale-95 text-left"
+          className="flex items-center justify-start space-x-2 bg-[#db5984] hover:bg-[#c2466f] text-white font-bold py-2 px-4 rounded-xl shadow-sm hover:shadow transition-all text-xs sm:text-xs cursor-pointer active:scale-95 text-left self-start"
           id="btn-back-search"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>BACK</span>
         </button>
 
-        {/* Coral Orange Update Timer badge */}
-        <div className="bg-[#fef5f2] border border-[#fbdcd5] rounded-xl px-4 py-1.5 text-[11px] sm:text-xs font-bold text-[#eb5e45] flex items-center justify-start gap-1.5 shadow-xs text-left">
-          <Clock className="w-3.5 h-3.5 text-[#eb5e45]" />
-          <span>อัปเดตล่าสุด: {lastUpdatedTime}</span>
+        <div className="flex flex-wrap items-center gap-2 self-start sm:self-auto">
+          {/* Real-time Google Sheets Sync status badge */}
+          {isRealTimeActive ? (
+            <div className="bg-emerald-50 border border-emerald-200 rounded-xl px-3 py-1.5 text-[11px] font-bold text-emerald-700 flex items-center gap-1.5 shadow-xs transition-all">
+              <span className="relative flex h-2 w-2">
+                <span className={`animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75 ${isSyncing ? "duration-500" : ""}`}></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+              </span>
+              <span>{isSyncing ? "กำลังซิงก์สด..." : "Real-time Sync Active"}</span>
+            </div>
+          ) : (
+            <div className="bg-gray-50 border border-gray-200 rounded-xl px-3 py-1.5 text-[11px] font-bold text-gray-500 flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-gray-400"></span>
+              <span>วิวด้านข้อมูลสาธิต (Demo)</span>
+            </div>
+          )}
+
+          {/* Coral Orange Update Timer badge */}
+          <div className="bg-[#fef5f2] border border-[#fbdcd5] rounded-xl px-4 py-1.5 text-[11px] sm:text-xs font-bold text-[#eb5e45] flex items-center justify-start gap-1.5 shadow-xs text-left">
+            <Clock className="w-3.5 h-3.5 text-[#eb5e45]" />
+            <span>อัปเดตล่าสุด: {lastUpdatedTime}</span>
+          </div>
         </div>
       </div>
 
