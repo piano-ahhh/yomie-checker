@@ -17,6 +17,7 @@ export const SAMPLE_ORDERS: OrderData[] = [
     item: "audred bad tank top",
     price: "300",
     shipping: "45",
+    total: "345",
     paid: "345",
     balance: "0",
     status: "จัดส่งสำเร็จ",
@@ -32,6 +33,7 @@ export const SAMPLE_ORDERS: OrderData[] = [
     item: "cat",
     price: "700",
     shipping: "45",
+    total: "745",
     paid: "745",
     balance: "0",
     status: "ถึงไทย",
@@ -47,6 +49,7 @@ export const SAMPLE_ORDERS: OrderData[] = [
     item: "poooo'น",
     price: "100",
     shipping: "0",
+    total: "100",
     paid: "100",
     balance: "0",
     status: "รอกดเว็บ",
@@ -62,6 +65,7 @@ export const SAMPLE_ORDERS: OrderData[] = [
     item: "audred bad tank top",
     price: "300",
     shipping: "45",
+    total: "345",
     paid: "300",
     balance: "45",
     status: "จัดส่งสำเร็จ",
@@ -77,6 +81,7 @@ export const SAMPLE_ORDERS: OrderData[] = [
     item: "cat",
     price: "700",
     shipping: "45",
+    total: "745",
     paid: "745",
     balance: "0",
     status: "ถึงไทย",
@@ -92,6 +97,7 @@ export const SAMPLE_ORDERS: OrderData[] = [
     item: "cute heart keychain",
     price: "120",
     shipping: "30",
+    total: "150",
     paid: "150",
     balance: "0",
     status: "จัดส่งสำเร็จ",
@@ -109,14 +115,15 @@ export const DEFAULT_MAPPING: ColumnMapping = {
   item: 2,           // C
   price: 3,          // D
   shipping: 4,       // E
-  paid: 5,           // F
-  balance: 6,        // G
-  status: 7,         // H
+  total: 5,          // F (Cell F:F for Total)
+  paid: 6,           // G (Cell G:G for Paid)
+  balance: 7,        // H (Cell H:H for Balance)
+  status: 8,         // I (Cell I:I for Status)
   orderId: 0,        // A (Often serial/No.)
   customerName: 1,   // B
   phone: 1,          // B
-  date: 8,           // I
-  notes: 9,          // J
+  date: 9,           // J (Cell J:J for Shipping Round Date)
+  notes: 8,          // I (Cell I:I)
   deliveryInfo: 10   // K
 };
 
@@ -209,16 +216,20 @@ export function autoDetectMapping(headers: string[]): ColumnMapping {
       mapping.price = index;
     } else if (matches(h, ["shipping", "ค่าส่ง", "ขนส่ง"])) {
       mapping.shipping = index;
+    } else if (matches(h, ["total", "ยอดรวม", "รวมเงิน", "รวมยอด", "รวม"])) {
+      mapping.total = index;
     } else if (matches(h, ["paid", "ยอดโอน", "จ่ายแล้ว", "จ่าย"])) {
       mapping.paid = index;
     } else if (matches(h, ["balance", "ค้างจ่าย", "ยอดค้าง", "ค้าง"])) {
       mapping.balance = index;
     } else if (matches(h, ["status", "สถานะ", "ความคืบหน้า"])) {
       mapping.status = index;
-    } else if (matches(h, ["order id", "เลขที่", "ไอดี"])) {
-      mapping.orderId = index;
-    } else if (matches(h, ["date", "วัน", "เวลา"])) {
+    } else if (matches(h, ["รอบเรือ", "เรือ", "รอบ", "ship round", "shipping round", "round", "วันรอบเรือ", "วันที่ของรอบเรือ"])) {
       mapping.date = index;
+    } else if (matches(h, ["order id", "เลขที่", "ไอดี", "วันที่", "วัน", "เวลา", "date"])) {
+      if (!matches(h, ["รอบ", "เรือ"])) {
+        mapping.orderId = index;
+      }
     } else if (matches(h, ["notes", "โน้ต", "บันทึก", "หมายเหตุ"])) {
       mapping.notes = index;
     } else if (matches(h, ["delivery", "shipping address", "ที่อยู่", "ที่จัดส่ง", "ที่อยู่จัดส่ง", "address", "ที่จัดส่งลูกค้า", "ข้อมูลที่จัดส่ง"])) {
@@ -286,6 +297,7 @@ export function parseGvizData(text: string, mapping: ColumnMapping): OrderData[]
       item: getCellValue(activeMapping.item),
       price: getCellValue(activeMapping.price),
       shipping: getCellValue(activeMapping.shipping),
+      total: getCellValue(activeMapping.total !== undefined ? activeMapping.total : 5),
       paid: getCellValue(activeMapping.paid),
       balance: getCellValue(activeMapping.balance),
       status: getCellValue(activeMapping.status),

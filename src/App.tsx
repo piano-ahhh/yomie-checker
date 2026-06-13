@@ -93,7 +93,10 @@ export default function App() {
           parsed.useFallbackSample || 
           !parsed.spreadsheetId || 
           parsed.spreadsheetId === "10nsjhgfxjl0sikl8Ellu_1p8cWvzfN_UBgSOFckhKdA" ||
-          parsed.mapping?.account === 0
+          parsed.mapping?.account === 0 ||
+          parsed.mapping?.date === 8 ||
+          parsed.mapping?.total === undefined ||
+          (parsed.spreadsheetId === "1Ck32GjDHoB9rgPBRgNh2qB7NEIPEEc4QoNqTXfIiQrY" && (parsed.mapping?.date !== 9 || parsed.mapping?.notes !== 8))
         ) {
           setConfig(INITIAL_CONFIG);
           localStorage.setItem('order_checker_config', JSON.stringify(INITIAL_CONFIG));
@@ -288,6 +291,9 @@ export default function App() {
               onClear={handleClear}
               sampleQueries={demoAccounts} 
             />
+            <p className="text-center text-[#38bdf8] font-medium text-sm sm:text-base tracking-widest font-sans mt-2 uppercase animate-pulse" id="thank-you-message">
+              Thank you for your purchase
+            </p>
           </div>
         )}
 

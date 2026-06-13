@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Settings, RefreshCw, ShoppingCart } from 'lucide-react';
+import { motion } from 'motion/react';
 
 interface HeaderProps {
   isConfigured: boolean;
@@ -8,6 +9,16 @@ interface HeaderProps {
 }
 
 export const Header: React.FC<HeaderProps> = ({ isConfigured, onOpenSettings, onRefresh }) => {
+  const [isSpinning, setIsSpinning] = useState(false);
+
+  const handleRefreshClick = () => {
+    setIsSpinning(true);
+    onRefresh();
+    setTimeout(() => {
+      setIsSpinning(false);
+    }, 800);
+  };
+
   return (
     <header className="w-full bg-[#fdfbf7] border-b-4 border-[#eb5e45] sticky top-0 z-40 py-2.5 px-4 sm:px-6 md:px-8">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
@@ -50,12 +61,18 @@ export const Header: React.FC<HeaderProps> = ({ isConfigured, onOpenSettings, on
         <div className="flex items-center space-x-1.5 sm:space-x-3">
           {/* Refresh Button */}
           <button
-            onClick={onRefresh}
+            onClick={handleRefreshClick}
             className="flex items-center space-x-1 sm:space-x-1.5 text-gray-500 hover:text-gray-800 text-xs sm:text-sm font-medium py-2 px-2 sm:px-3 rounded-xl hover:bg-gray-100 transition-all cursor-pointer active:scale-95 whitespace-nowrap"
             id="header-refresh-action"
             title="รีเฟรชอัปเดตข้อมูลชีตล่าลุด"
           >
-            <RefreshCw className="w-3.5 h-3.5 text-gray-500 animate-spin-hover" />
+            <motion.div
+              animate={isSpinning ? { rotate: 360 } : { rotate: 0 }}
+              transition={{ duration: 0.8, ease: "easeInOut" }}
+              className="flex items-center justify-center"
+            >
+              <RefreshCw className="w-3.5 h-3.5 text-gray-500" />
+            </motion.div>
             <span className="hidden xs:inline sm:inline">รีเฟรชข้อมูล</span>
           </button>
 

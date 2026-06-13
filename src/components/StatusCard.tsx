@@ -195,6 +195,7 @@ export const StatusCard: React.FC<StatusCardProps> = ({
                 <th className="py-1 px-2 text-[10.5px] sm:text-[11px] font-black text-[#8898a9] uppercase tracking-wider font-mono text-left">ITEM</th>
                 <th className="py-1 px-2 text-[10.5px] sm:text-[11px] font-black text-[#8898a9] uppercase tracking-wider font-mono text-left">PRICE</th>
                 <th className="py-1 px-2 text-[10.5px] sm:text-[11px] font-black text-[#8898a9] uppercase tracking-wider font-mono text-left">SHIPPING</th>
+                <th className="py-1 px-2 text-[10.5px] sm:text-[11px] font-black text-[#8898a9] uppercase tracking-wider font-mono text-left">TOTAL</th>
                 <th className="py-1 px-2 text-[10.5px] sm:text-[11px] font-black text-[#8898a9] uppercase tracking-wider font-mono text-left">PAID</th>
                 <th className="py-1 px-2 text-[10.5px] sm:text-[11px] font-black text-[#8898a9] uppercase tracking-wider font-mono text-left">BALANCE</th>
                 <th className="py-1 px-2 text-[10.5px] sm:text-[11px] font-black text-[#8898a9] uppercase tracking-wider font-mono text-left whitespace-nowrap">STATUS</th>
@@ -228,6 +229,11 @@ export const StatusCard: React.FC<StatusCardProps> = ({
                     {/* SHIPPING price */}
                     <td className="py-1.5 px-2 text-[11px] sm:text-xs font-semibold text-[#718096] text-left font-mono">
                       ฿{cleanNumber(ord.shipping)}
+                    </td>
+
+                    {/* TOTAL price (Price + Shipping / Cell F) */}
+                    <td className="py-1.5 px-2 text-[11px] sm:text-xs font-bold text-[#4f46e5] text-left font-mono">
+                      ฿{ord.total ? cleanNumber(ord.total) : (cleanNumber(ord.price) + cleanNumber(ord.shipping))}
                     </td>
                      
                     {/* PAID column */}

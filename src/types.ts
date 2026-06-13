@@ -3,6 +3,7 @@ export interface ColumnMapping {
   item: number;          // Column index
   price: number;         // Column index
   shipping: number;      // Column index
+  total: number;         // Column index for total
   paid: number;          // Column index
   balance: number;       // Column index
   status: number;        // Column index
@@ -19,6 +20,7 @@ export interface OrderData {
   item: string;         // e.g. "audred bad tank top"
   price: string;        // e.g. "300"
   shipping: string;     // e.g. "45"
+  total: string;        // e.g. "345"
   paid: string;         // e.g. "345"
   balance: string;      // e.g. "0"
   status: string;       // e.g. "จัดส่งสำเร็จ"
