@@ -121,8 +121,8 @@ export const DEFAULT_MAPPING: ColumnMapping = {
 };
 
 export const INITIAL_CONFIG: SheetConfig = {
-  spreadsheetUrl: "https://docs.google.com/spreadsheets/d/10nsjhgfxjl0sikl8Ellu_1p8cWvzfN_UBgSOFckhKdA/edit?gid=1840635151#gid=1840635151",
-  spreadsheetId: "10nsjhgfxjl0sikl8Ellu_1p8cWvzfN_UBgSOFckhKdA",
+  spreadsheetUrl: "https://docs.google.com/spreadsheets/d/1Ck32GjDHoB9rgPBRgNh2qB7NEIPEEc4QoNqTXfIiQrY/edit?gid=0#gid=0",
+  spreadsheetId: "1Ck32GjDHoB9rgPBRgNh2qB7NEIPEEc4QoNqTXfIiQrY",
   sheetName: "", // Leaving empty by default enables automatic tab query (defaults to first worksheet/gid=0)
   mapping: DEFAULT_MAPPING,
   isConfigured: true,

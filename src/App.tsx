@@ -88,8 +88,13 @@ export default function App() {
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
-        // Automatically upgrade config to the requested Google Sheet if it was on demo fallback or old mapping
-        if (parsed.useFallbackSample || !parsed.spreadsheetId || parsed.mapping?.account === 0) {
+        // Automatically upgrade config to the requested Google Sheet if it was on demo fallback, old mapping, or old sheet ID
+        if (
+          parsed.useFallbackSample || 
+          !parsed.spreadsheetId || 
+          parsed.spreadsheetId === "10nsjhgfxjl0sikl8Ellu_1p8cWvzfN_UBgSOFckhKdA" ||
+          parsed.mapping?.account === 0
+        ) {
           setConfig(INITIAL_CONFIG);
           localStorage.setItem('order_checker_config', JSON.stringify(INITIAL_CONFIG));
         } else {
