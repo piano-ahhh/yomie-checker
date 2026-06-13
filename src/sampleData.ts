@@ -141,12 +141,30 @@ export function extractSpreadsheetId(url: string): string | null {
 /**
  * Generate Google Sheets Visualization API Query URL
  */
-export function buildQueryUrl(spreadsheetId: string, sheetName: string): string {
-  if (!sheetName) {
-    return `https://docs.google.com/spreadsheets/d/${spreadsheetId}/gviz/tq?tqx=out:json`;
+export function buildQueryUrl(spreadsheetId: string, sheetName: string, spreadsheetUrl?: string): string {
+  // Extract gid from url if present
+  let gid: string | null = null;
+  if (spreadsheetUrl) {
+    const match = spreadsheetUrl.match(/[?&#]gid=([0-9]+)/);
+    if (match) {
+      gid = match[1];
+    }
   }
-  const encSheet = encodeURIComponent(sheetName);
-  return `https://docs.google.com/spreadsheets/d/${spreadsheetId}/gviz/tq?sheet=${encSheet}&tqx=out:json`;
+
+  if (sheetName) {
+    const encSheet = encodeURIComponent(sheetName);
+    let url = `https://docs.google.com/spreadsheets/d/${spreadsheetId}/gviz/tq?sheet=${encSheet}&tqx=out:json`;
+    if (gid) {
+      url += `&gid=${gid}`;
+    }
+    return url;
+  }
+
+  let url = `https://docs.google.com/spreadsheets/d/${spreadsheetId}/gviz/tq?tqx=out:json`;
+  if (gid) {
+    url += `&gid=${gid}`;
+  }
+  return url;
 }
 
 /**

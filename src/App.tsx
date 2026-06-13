@@ -41,7 +41,7 @@ export default function App() {
     const normalizedSearch = normalizeAccount(query);
 
     try {
-      const queryUrl = buildQueryUrl(config.spreadsheetId, config.sheetName);
+      const queryUrl = buildQueryUrl(config.spreadsheetId, config.sheetName, config.spreadsheetUrl);
       const res = await fetch(queryUrl);
       if (!res.ok) {
         throw new Error(`Google Sheets endpoint error. Status Code: ${res.status}`);
@@ -197,7 +197,7 @@ export default function App() {
     } else {
       // Online Real-time sheets fetching
       try {
-        const queryUrl = buildQueryUrl(config.spreadsheetId, config.sheetName);
+        const queryUrl = buildQueryUrl(config.spreadsheetId, config.sheetName, config.spreadsheetUrl);
         const res = await fetch(queryUrl);
         if (!res.ok) {
           throw new Error(`Google Sheets endpoint error. Status Code: ${res.status}`);

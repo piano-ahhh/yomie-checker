@@ -111,7 +111,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
     };
 
     try {
-      const queryUrl = buildQueryUrl(spreadsheetId, sheetNameInput);
+      const queryUrl = buildQueryUrl(spreadsheetId, sheetNameInput, urlInput);
       const response = await fetch(queryUrl);
       if (!response.ok) {
         throw new Error(`HTTP Error ${response.status}`);
@@ -146,7 +146,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
     }
 
     try {
-      const queryUrl = buildQueryUrl(spreadsheetId, sheetNameInput);
+      const queryUrl = buildQueryUrl(spreadsheetId, sheetNameInput, urlInput);
       const response = await fetch(queryUrl);
       const text = await response.text();
       
