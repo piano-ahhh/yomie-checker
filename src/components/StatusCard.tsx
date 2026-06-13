@@ -148,7 +148,7 @@ export const StatusCard: React.FC<StatusCardProps> = ({
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="border-b border-[#e5e7eb]">
-                <th className="py-1 px-2 text-[10.5px] sm:text-[11px] font-black text-[#8898a9] uppercase tracking-wider font-mono text-left">ACCOUNT</th>
+                <th className="py-1 px-2 text-[10.5px] sm:text-[11px] font-black text-[#8898a9] uppercase tracking-wider font-mono text-left">no.</th>
                 <th className="py-1 px-2 text-[10.5px] sm:text-[11px] font-black text-[#8898a9] uppercase tracking-wider font-mono text-left">ITEM</th>
                 <th className="py-1 px-2 text-[10.5px] sm:text-[11px] font-black text-[#8898a9] uppercase tracking-wider font-mono text-left">PRICE</th>
                 <th className="py-1 px-2 text-[10.5px] sm:text-[11px] font-black text-[#8898a9] uppercase tracking-wider font-mono text-left">SHIPPING</th>
@@ -167,9 +167,9 @@ export const StatusCard: React.FC<StatusCardProps> = ({
                     key={idx} 
                     className="border-b border-[#f4f6f8] hover:bg-gray-50/50 transition-colors"
                   >
-                    {/* ACCOUNT column */}
-                    <td className="py-1.5 px-2 text-[11px] sm:text-xs font-semibold text-[#1c2a38] font-sans text-left">
-                      {ord.account || accountName}
+                    {/* NO. column */}
+                    <td className="py-1.5 px-2 text-[11px] sm:text-xs font-semibold text-[#1c2a38] font-mono text-left">
+                      {idx + 1}
                     </td>
                      
                     {/* ITEM description */}
