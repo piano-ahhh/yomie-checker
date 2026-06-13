@@ -1,6 +1,6 @@
 import React from 'react';
 import { OrderData } from '../types';
-import { Landmark, ArrowLeft, Coins, CheckCircle, Package, Clock, HelpCircle } from 'lucide-react';
+import { Landmark, ArrowLeft, Coins, CheckCircle, Package, Clock, HelpCircle, MapPin } from 'lucide-react';
 
 interface StatusCardProps {
   orders: OrderData[];
@@ -29,15 +29,22 @@ export const StatusCard: React.FC<StatusCardProps> = ({
   };
 
   // Convert status to appropriate color class styles to match screenshot perfectly!
-  const getStatusBadgeStyle = (statusStr: string) => {
+  const getStatusBadgeStyle = (statusStr: string, dateStr?: string) => {
     const clean = (statusStr || "").trim().toLowerCase();
     
+    // Check if status is related to shipping round (contains "เรือ", "รอบ", "บิน")
+    const hasDateStr = dateStr && dateStr.trim().length > 0;
+    const isShippingRound = clean.includes("เรือ") || clean.includes("รอบ") || clean.includes("บิน");
+    const formattedLabel = isShippingRound
+      ? (hasDateStr ? `รอบเรือ ${dateStr}` : "รอบเรือ")
+      : (statusStr || "เตรียมจัดส่ง");
+
     if (clean.includes("สำเร็จ") || clean.includes("complete") || clean.includes("success") || clean.includes("เสร็จ")) {
       return {
         bg: "bg-[#f2faf3]",
         border: "border-[#d1f2d9]",
         text: "text-[#4db86f]",
-        label: statusStr || "จัดส่งสำเร็จ"
+        label: formattedLabel || "จัดส่งสำเร็จ"
       };
     }
     if (clean.includes("ไทย") || clean.includes("thailand") || clean.includes("th") || clean.includes("ถึงไทย")) {
@@ -45,7 +52,31 @@ export const StatusCard: React.FC<StatusCardProps> = ({
         bg: "bg-[#edf7fd]",
         border: "border-[#d0ebfc]",
         text: "text-[#3daae0]",
-        label: statusStr || "ถึงไทย"
+        label: formattedLabel || "ถึงไทย"
+      };
+    }
+    if (clean.includes("ถึงบ้านจีน") || clean.includes("บ้านจีน")) {
+      return {
+        bg: "bg-[#fff5f5]",
+        border: "border-[#feb2b2]",
+        text: "text-[#e53e3e]",
+        label: formattedLabel || "ถึงบ้านจีน"
+      };
+    }
+    if (clean.includes("รอรวม")) {
+      return {
+        bg: "bg-[#faf5ff]",
+        border: "border-[#e9d5ff]",
+        text: "text-[#805ad5]",
+        label: formattedLabel || "รอรวม"
+      };
+    }
+    if (clean.includes("รอเว็บจัดส่ง") || clean.includes("เว็บจัดส่ง")) {
+      return {
+        bg: "bg-[#f1f3f9]",
+        border: "border-[#cbd6e2]",
+        text: "text-[#627ca3]",
+        label: formattedLabel || "รอเว็บจัดส่ง"
       };
     }
     if (clean.includes("รอกด") || clean.includes("กดเว็บ") || clean.includes("pending") || clean.includes("รอดำเนินการ")) {
@@ -53,7 +84,16 @@ export const StatusCard: React.FC<StatusCardProps> = ({
         bg: "bg-[#f1f3f9]",
         border: "border-[#cbd6e2]",
         text: "text-[#627ca3]",
-        label: statusStr || "รอกดเว็บ"
+        label: formattedLabel || "รอกดเว็บ"
+      };
+    }
+    // Specific custom style for shipping round "รอบเรือ" to make it look beautiful
+    if (clean.includes("เรือ") || clean.includes("บิน") || clean.includes("รอบ")) {
+      return {
+        bg: "bg-[#fffbeb]", // Warm cozy yellow
+        border: "border-[#fde68a]", // Soft yellow/amber border
+        text: "text-[#b45309]", // Dark amber/brown text for high readability
+        label: formattedLabel
       };
     }
     // Default pastel badge
@@ -61,7 +101,7 @@ export const StatusCard: React.FC<StatusCardProps> = ({
       bg: "bg-[#fef9f3]",
       border: "border-[#fbe4d1]",
       text: "text-[#d17e3a]",
-      label: statusStr || "เตรียมจัดส่ง"
+      label: formattedLabel
     };
   };
 
@@ -76,6 +116,9 @@ export const StatusCard: React.FC<StatusCardProps> = ({
   const totalBalance = orders.reduce((sum, order) => {
     return sum + cleanNumber(order.balance);
   }, 0);
+
+  // Extract customer's shipping address from Column K:K
+  const shippingAddress = orders.find(o => o.deliveryInfo && o.deliveryInfo.trim().length > 0)?.deliveryInfo || "";
 
   return (
     <div className="w-full max-w-5xl mx-auto space-y-5 animate-fade-in" id="status-results-scene">
@@ -148,7 +191,7 @@ export const StatusCard: React.FC<StatusCardProps> = ({
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="border-b border-[#e5e7eb]">
-                <th className="py-1 px-2 text-[10.5px] sm:text-[11px] font-black text-[#8898a9] uppercase tracking-wider font-mono text-left">no.</th>
+                <th className="py-1 px-2 text-[10.5px] sm:text-[11px] font-black text-[#8898a9] uppercase tracking-wider font-mono text-left">date</th>
                 <th className="py-1 px-2 text-[10.5px] sm:text-[11px] font-black text-[#8898a9] uppercase tracking-wider font-mono text-left">ITEM</th>
                 <th className="py-1 px-2 text-[10.5px] sm:text-[11px] font-black text-[#8898a9] uppercase tracking-wider font-mono text-left">PRICE</th>
                 <th className="py-1 px-2 text-[10.5px] sm:text-[11px] font-black text-[#8898a9] uppercase tracking-wider font-mono text-left">SHIPPING</th>
@@ -159,7 +202,7 @@ export const StatusCard: React.FC<StatusCardProps> = ({
             </thead>
             <tbody>
               {orders.map((ord, idx) => {
-                const sStyle = getStatusBadgeStyle(ord.status);
+                const sStyle = getStatusBadgeStyle(ord.status, ord.date);
                 const hasBalance = cleanNumber(ord.balance) > 0;
                 
                 return (
@@ -167,9 +210,9 @@ export const StatusCard: React.FC<StatusCardProps> = ({
                     key={idx} 
                     className="border-b border-[#f4f6f8] hover:bg-gray-50/50 transition-colors"
                   >
-                    {/* NO. column */}
-                    <td className="py-1.5 px-2 text-[11px] sm:text-xs font-semibold text-[#1c2a38] font-mono text-left">
-                      {idx + 1}
+                    {/* DATE column */}
+                    <td className="py-1.5 px-2 text-[11px] sm:text-xs font-semibold text-[#1c2a38] font-mono text-left whitespace-nowrap">
+                      {ord.orderId || '-'}
                     </td>
                      
                     {/* ITEM description */}
@@ -213,9 +256,10 @@ export const StatusCard: React.FC<StatusCardProps> = ({
         </div>
 
         {/* Bottom card widgets info matching Screenshot 2 footer style */}
-        <div className="flex justify-end pt-8" id="total-remaining-balance-strip">
+        <div className="flex flex-col items-end gap-3 pt-8" id="total-remaining-balance-strip">
+          {/* Outstanding Balance Box */}
           <div className="min-w-[260px] bg-[#fffdf0] border-2 border-[#fcd34d] rounded-2xl p-4.5 flex items-center justify-between gap-5 shadow-xs">
-            <div className="space-y-1.5">
+            <div className="space-y-1.5 flex-1 text-left">
               <span className="text-xs text-[#854d0e] font-extrabold block font-sans tracking-wide">ยอดค้างจ่ายคงเหลือ</span>
               <span className="text-xl sm:text-[23px] font-black text-[#b45309] font-mono tracking-tight leading-none block">
                 ฿{totalBalance}
@@ -223,8 +267,22 @@ export const StatusCard: React.FC<StatusCardProps> = ({
             </div>
             
             {/* Round Gold coin icon representing USD/Baht currency symbol */}
-            <div className="w-11 h-11 rounded-full bg-[#fef08a] border-2 border-[#fcd34d] flex items-center justify-center text-[#ca8a04] shadow-xs">
+            <div className="w-11 h-11 rounded-full bg-[#fef08a] border-2 border-[#fcd34d] flex items-center justify-center text-[#ca8a04] shadow-xs shrink-0">
               <Coins className="w-5.5 h-5.5 text-[#ca8a04] fill-[#fef08a]" />
+            </div>
+          </div>
+
+          {/* Customer Shipping Address Box (from Column K) */}
+          <div className="w-full sm:max-w-md bg-[#fafafa] border-2 border-[#e5e7eb] rounded-2xl p-4 flex items-start gap-3.5 shadow-xs transition-all hover:border-[#db5984]/30">
+            {/* Round Pin icon with soft primary/neutral backgrounds */}
+            <div className="w-10 h-10 rounded-full bg-[#fdf2f8] border border-[#fbcfe8] flex items-center justify-center text-[#db5984] shadow-xs shrink-0 pt-0.5">
+              <MapPin className="w-5 h-5 text-[#db5984] fill-[#fdf2f8]" />
+            </div>
+            <div className="space-y-1 font-sans text-left flex-1 min-w-0">
+              <span className="text-xs text-stone-500 font-extrabold tracking-wide block">ที่อยู่จัดส่ง</span>
+              <p className="text-[12.5px] sm:text-xs font-semibold text-[#1c2a38] break-words leading-relaxed">
+                {shippingAddress.trim() || "ยังไม่มีข้อมูลที่จัดส่งในระบบ กรุณาติดต่อทางร้านค่ะ"}
+              </p>
             </div>
           </div>
         </div>

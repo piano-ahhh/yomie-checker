@@ -11,6 +11,7 @@ export interface ColumnMapping {
   phone: number;         // Column index
   date: number;          // Column index
   notes: number;         // Column index
+  deliveryInfo: number;  // Column index for shipping information (e.g. Column K)
 }
 
 export interface OrderData {
@@ -28,6 +29,8 @@ export interface OrderData {
   phone: string;
   date: string;
   notes: string;
+  deliveryInfo: string;  // Customer delivery information from Column K
+  colBValue?: string;
 }
 
 export interface SheetConfig {

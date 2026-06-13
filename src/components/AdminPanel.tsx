@@ -30,18 +30,19 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
   
   // Backing code mapping string state
   const [mappingStr, setMappingStr] = useState<Record<keyof ColumnMapping, string>>({
-    account: "A",
-    item: "B",
-    price: "C",
-    shipping: "D",
-    paid: "E",
-    balance: "F",
-    status: "G",
-    orderId: "H",
-    customerName: "A",
-    phone: "A",
+    account: "B",
+    item: "C",
+    price: "D",
+    shipping: "E",
+    paid: "F",
+    balance: "G",
+    status: "H",
+    orderId: "A",
+    customerName: "B",
+    phone: "B",
     date: "I",
-    notes: "J"
+    notes: "J",
+    deliveryInfo: "K"
   });
   
   const [isTesting, setIsTesting] = useState(false);
@@ -106,6 +107,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
       phone: letterToIdx(mappingStr.phone),
       date: letterToIdx(mappingStr.date),
       notes: letterToIdx(mappingStr.notes),
+      deliveryInfo: letterToIdx(mappingStr.deliveryInfo),
     };
 
     try {
@@ -206,6 +208,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
       phone: letterToIdx(mappingStr.phone),
       date: letterToIdx(mappingStr.date),
       notes: letterToIdx(mappingStr.notes),
+      deliveryInfo: letterToIdx(mappingStr.deliveryInfo),
     };
 
     onSaveConfig({
@@ -229,7 +232,8 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
     { key: "status", label: "สถานะสั่งซื้อส่งของ (Order Status)", placeholder: "G", desc: "เช่น จัดส่งสำเร็จ / ถึงไทย / รอกดเว็บ" },
     { key: "orderId", label: "รหัสคำสั่งซื้ออ้างอิง (Order Reference)", placeholder: "H", desc: "เช่น ORD-xxxx" },
     { key: "date", label: "วันที่บันทึกรายการ (Entry Date)", placeholder: "I", desc: "วันที่เพิ่มแถวลงตาราง" },
-    { key: "notes", label: "หมายเหตุร้าน (Merchant Note)", placeholder: "J", desc: "รายละเอียดบันทึกเพิ่มเติมถึงผู้ซื้อ" }
+    { key: "notes", label: "หมายเหตุร้าน (Merchant Note)", placeholder: "J", desc: "รายละเอียดบันทึกเพิ่มเติมถึงผู้ซื้อ" },
+    { key: "deliveryInfo", label: "ข้อมูลที่จัดส่งลูกค้า (Shipping Info / Column K)", placeholder: "K", desc: "ที่อยู่จัดส่งหรือข้อมูลจัดส่งปลายทางของลูกค้า" }
   ];
 
   return (

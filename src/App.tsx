@@ -51,9 +51,8 @@ export default function App() {
       
       const matches = allRows.filter(o => {
         const accountMatch = o.account && normalizeAccount(o.account) === normalizedSearch;
-        const nameMatch = o.customerName && o.customerName.toLowerCase().includes(query.toLowerCase());
-        const idMatch = o.orderId && o.orderId.toLowerCase() === query.toLowerCase();
-        return accountMatch || nameMatch || idMatch;
+        const colBMatch = o.colBValue && normalizeAccount(o.colBValue) === normalizedSearch;
+        return accountMatch || colBMatch;
       });
 
       setMatchedOrders(matches);
@@ -89,10 +88,20 @@ export default function App() {
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
-        setConfig(parsed);
+        // Automatically upgrade config to the requested Google Sheet if it was on demo fallback or old mapping
+        if (parsed.useFallbackSample || !parsed.spreadsheetId || parsed.mapping?.account === 0) {
+          setConfig(INITIAL_CONFIG);
+          localStorage.setItem('order_checker_config', JSON.stringify(INITIAL_CONFIG));
+        } else {
+          setConfig(parsed);
+        }
       } catch (e) {
         console.error('Failed to parse saved config.', e);
+        setConfig(INITIAL_CONFIG);
       }
+    } else {
+      setConfig(INITIAL_CONFIG);
+      localStorage.setItem('order_checker_config', JSON.stringify(INITIAL_CONFIG));
     }
   }, []);
 
@@ -157,12 +166,25 @@ export default function App() {
     if (config.useFallbackSample) {
       // Searching inside mock data with highly satisfying cute delay
       setTimeout(() => {
+        const columnBValues = Array.from(
+          new Set(
+            SAMPLE_ORDERS
+              .map(o => (o.account || "").trim())
+              .filter(Boolean)
+              .map(val => normalizeAccount(val))
+          )
+        );
+
+        if (!columnBValues.includes(normalizedSearch)) {
+          setErrorText("กรุณากรอกใหม่อีกครั้งหรือติดต่อร้านค่ะ");
+          setSearchQuery('');
+          setIsLoading(false);
+          return;
+        }
+
         const matches = SAMPLE_ORDERS.filter(o => {
           const accountMatch = normalizeAccount(o.account) === normalizedSearch;
-          // Also fallback match check list
-          const nameMatch = o.customerName && o.customerName.toLowerCase().includes(cleanQuery.toLowerCase());
-          const idMatch = o.orderId && o.orderId.toLowerCase() === cleanQuery.toLowerCase();
-          return accountMatch || nameMatch || idMatch;
+          return accountMatch;
         });
 
         if (matches.length > 0) {
@@ -183,12 +205,28 @@ export default function App() {
         const text = await res.text();
         const allRows = parseGvizData(text, config.mapping);
         
+        // Get all unique values from column B:B to ensure strict validation
+        const columnBValues = Array.from(
+          new Set(
+            allRows
+              .map(o => (o.account || o.colBValue || "").trim())
+              .filter(Boolean)
+              .map(val => normalizeAccount(val))
+          )
+        );
+
+        if (!columnBValues.includes(normalizedSearch)) {
+          setErrorText("กรุณากรอกใหม่อีกครั้งหรือติดต่อร้านค่ะ");
+          setSearchQuery('');
+          setIsLoading(false);
+          return;
+        }
+
         // Match search filters
         const matches = allRows.filter(o => {
           const accountMatch = o.account && normalizeAccount(o.account) === normalizedSearch;
-          const nameMatch = o.customerName && o.customerName.toLowerCase().includes(cleanQuery.toLowerCase());
-          const idMatch = o.orderId && o.orderId.toLowerCase() === cleanQuery.toLowerCase();
-          return accountMatch || nameMatch || idMatch;
+          const colBMatch = o.colBValue && normalizeAccount(o.colBValue) === normalizedSearch;
+          return accountMatch || colBMatch;
         });
 
         setMatchedOrders(matches);

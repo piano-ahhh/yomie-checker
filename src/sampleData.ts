@@ -20,11 +20,12 @@ export const SAMPLE_ORDERS: OrderData[] = [
     paid: "345",
     balance: "0",
     status: "จัดส่งสำเร็จ",
-    orderId: "ORD-001",
+    orderId: "12/06/2026",
     customerName: "wi",
     phone: "@wi",
-    date: "2026-06-12",
-    notes: ""
+    date: "12/06/2026",
+    notes: "",
+    deliveryInfo: "99/1 ถ.สุขุมวิท แขวงคลองเตย เขตคลองเตย กรุงเทพฯ 10110"
   },
   {
     account: "wi",
@@ -34,11 +35,12 @@ export const SAMPLE_ORDERS: OrderData[] = [
     paid: "745",
     balance: "0",
     status: "ถึงไทย",
-    orderId: "ORD-002",
+    orderId: "12/06/2026",
     customerName: "wi",
     phone: "@wi",
-    date: "2026-06-12",
-    notes: ""
+    date: "12/06/2026",
+    notes: "",
+    deliveryInfo: "99/1 ถ.สุขุมวิท แขวงคลองเตย เขตคลองเตย กรุงเทพฯ 10110"
   },
   {
     account: "wi",
@@ -48,11 +50,12 @@ export const SAMPLE_ORDERS: OrderData[] = [
     paid: "100",
     balance: "0",
     status: "รอกดเว็บ",
-    orderId: "ORD-003",
+    orderId: "11/06/2026",
     customerName: "wi",
     phone: "@wi",
-    date: "2026-06-12",
-    notes: ""
+    date: "11/06/2026",
+    notes: "",
+    deliveryInfo: "99/1 ถ.สุขุมวิท แขวงคลองเตย เขตคลองเตย กรุงเทพฯ 10110"
   },
   {
     account: "wi",
@@ -62,11 +65,12 @@ export const SAMPLE_ORDERS: OrderData[] = [
     paid: "300",
     balance: "45",
     status: "จัดส่งสำเร็จ",
-    orderId: "ORD-004",
+    orderId: "10/06/2026",
     customerName: "wi",
     phone: "@wi",
-    date: "2026-06-12",
-    notes: "ค้างจ่ายคงเหลือ 45 บาท"
+    date: "10/06/2026",
+    notes: "ค้างจ่ายคงเหลือ 45 บาท",
+    deliveryInfo: "99/1 ถ.สุขุมวิท แขวงคลองเตย เขตคลองเตย กรุงเทพฯ 10110"
   },
   {
     account: "wi",
@@ -76,11 +80,12 @@ export const SAMPLE_ORDERS: OrderData[] = [
     paid: "745",
     balance: "0",
     status: "ถึงไทย",
-    orderId: "ORD-005",
+    orderId: "09/06/2026",
     customerName: "wi",
     phone: "@wi",
-    date: "2026-06-12",
-    notes: ""
+    date: "09/06/2026",
+    notes: "",
+    deliveryInfo: "99/1 ถ.สุขุมวิท แขวงคลองเตย เขตคลองเตย กรุงเทพฯ 10110"
   },
   {
     account: "yomiie",
@@ -90,36 +95,38 @@ export const SAMPLE_ORDERS: OrderData[] = [
     paid: "150",
     balance: "0",
     status: "จัดส่งสำเร็จ",
-    orderId: "ORD-006",
+    orderId: "11/06/2026",
     customerName: "Yomiie",
     phone: "@yomiie",
-    date: "2026-06-11",
-    notes: "จัดส่งพร้อมแพ็กเกจน่ารักเรียบร้อย"
+    date: "11/06/2026",
+    notes: "จัดส่งพร้อมแพ็กเกจน่ารักเรียบร้อย",
+    deliveryInfo: "123 หมู่ 5 ต.บ้านดู่ อ.เมือง จ.เชียงราย 57100"
   }
 ];
 
 export const DEFAULT_MAPPING: ColumnMapping = {
-  account: 0,        // A
-  item: 1,           // B
-  price: 2,          // C
-  shipping: 3,       // D
-  paid: 4,           // E
-  balance: 5,        // F
-  status: 6,         // G
-  orderId: 7,        // H
-  customerName: 0,   // A
-  phone: 0,          // A
+  account: 1,        // B
+  item: 2,           // C
+  price: 3,          // D
+  shipping: 4,       // E
+  paid: 5,           // F
+  balance: 6,        // G
+  status: 7,         // H
+  orderId: 0,        // A (Often serial/No.)
+  customerName: 1,   // B
+  phone: 1,          // B
   date: 8,           // I
-  notes: 9           // J
+  notes: 9,          // J
+  deliveryInfo: 10   // K
 };
 
 export const INITIAL_CONFIG: SheetConfig = {
-  spreadsheetUrl: "",
-  spreadsheetId: "",
-  sheetName: "Sheet1",
+  spreadsheetUrl: "https://docs.google.com/spreadsheets/d/10nsjhgfxjl0sikl8Ellu_1p8cWvzfN_UBgSOFckhKdA/edit?gid=1840635151#gid=1840635151",
+  spreadsheetId: "10nsjhgfxjl0sikl8Ellu_1p8cWvzfN_UBgSOFckhKdA",
+  sheetName: "", // Leaving empty by default enables automatic tab query (defaults to first worksheet/gid=0)
   mapping: DEFAULT_MAPPING,
-  isConfigured: false,
-  useFallbackSample: true,
+  isConfigured: true,
+  useFallbackSample: false,
 };
 
 /**
@@ -135,6 +142,9 @@ export function extractSpreadsheetId(url: string): string | null {
  * Generate Google Sheets Visualization API Query URL
  */
 export function buildQueryUrl(spreadsheetId: string, sheetName: string): string {
+  if (!sheetName) {
+    return `https://docs.google.com/spreadsheets/d/${spreadsheetId}/gviz/tq?tqx=out:json`;
+  }
   const encSheet = encodeURIComponent(sheetName);
   return `https://docs.google.com/spreadsheets/d/${spreadsheetId}/gviz/tq?sheet=${encSheet}&tqx=out:json`;
 }
@@ -193,6 +203,8 @@ export function autoDetectMapping(headers: string[]): ColumnMapping {
       mapping.date = index;
     } else if (matches(h, ["notes", "โน้ต", "บันทึก", "หมายเหตุ"])) {
       mapping.notes = index;
+    } else if (matches(h, ["delivery", "shipping address", "ที่อยู่", "ที่จัดส่ง", "ที่อยู่จัดส่ง", "address", "ที่จัดส่งลูกค้า", "ข้อมูลที่จัดส่ง"])) {
+      mapping.deliveryInfo = index;
     }
   });
 
@@ -225,6 +237,16 @@ export function parseGvizData(text: string, mapping: ColumnMapping): OrderData[]
   const cols = data.table.cols || [];
   const rows = data.table.rows || [];
 
+  // SMART AUTO-DETECT: If column labels are available from Google Sheets, use them to dynamically determine the mapping!
+  let activeMapping = { ...mapping };
+  if (cols.length > 0) {
+    const headers = cols.map((c: any) => c.label || "");
+    const hasLabels = headers.some(h => h.trim().length > 0);
+    if (hasLabels) {
+      activeMapping = autoDetectMapping(headers);
+    }
+  }
+
   return rows.map((row: any) => {
     const cells = row.c || [];
     
@@ -242,18 +264,20 @@ export function parseGvizData(text: string, mapping: ColumnMapping): OrderData[]
     };
 
     return {
-      account: getCellValue(mapping.account),
-      item: getCellValue(mapping.item),
-      price: getCellValue(mapping.price),
-      shipping: getCellValue(mapping.shipping),
-      paid: getCellValue(mapping.paid),
-      balance: getCellValue(mapping.balance),
-      status: getCellValue(mapping.status),
-      orderId: getCellValue(mapping.orderId),
-      customerName: getCellValue(mapping.customerName),
-      phone: getCellValue(mapping.phone),
-      date: getCellValue(mapping.date),
-      notes: getCellValue(mapping.notes),
+      account: getCellValue(activeMapping.account),
+      item: getCellValue(activeMapping.item),
+      price: getCellValue(activeMapping.price),
+      shipping: getCellValue(activeMapping.shipping),
+      paid: getCellValue(activeMapping.paid),
+      balance: getCellValue(activeMapping.balance),
+      status: getCellValue(activeMapping.status),
+      orderId: getCellValue(activeMapping.orderId),
+      customerName: getCellValue(activeMapping.customerName),
+      phone: getCellValue(activeMapping.phone),
+      date: getCellValue(activeMapping.date),
+      notes: getCellValue(activeMapping.notes),
+      deliveryInfo: getCellValue(activeMapping.deliveryInfo !== undefined ? activeMapping.deliveryInfo : 10), // Default to Column K (index 10)
+      colBValue: getCellValue(1), // index 1 is Column B
     };
   });
 }
