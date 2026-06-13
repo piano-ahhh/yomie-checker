@@ -281,7 +281,7 @@ export const StatusCard: React.FC<StatusCardProps> = ({
             <div className="space-y-1 font-sans text-left flex-1 min-w-0">
               <span className="text-xs text-stone-500 font-extrabold tracking-wide block">ที่อยู่จัดส่ง</span>
               <p className="text-[12.5px] sm:text-xs font-semibold text-[#1c2a38] break-words leading-relaxed">
-                {shippingAddress.trim() || "ยังไม่มีข้อมูลที่จัดส่งในระบบ กรุณาติดต่อทางร้านค่ะ"}
+                {shippingAddress.trim() || "ยังไม่มีข้อมูลที่จัดส่งในระบบ"}
               </p>
             </div>
           </div>
