@@ -258,7 +258,7 @@ export const StatusCard: React.FC<StatusCardProps> = ({
         {/* Bottom card widgets info matching Screenshot 2 footer style */}
         <div className="flex flex-col items-end gap-3 pt-8" id="total-remaining-balance-strip">
           {/* Outstanding Balance Box */}
-          <div className="min-w-[260px] bg-[#fffdf0] border-2 border-[#fcd34d] rounded-2xl p-4.5 flex items-center justify-between gap-5 shadow-xs">
+          <div className="w-full sm:max-w-md bg-[#fffdf0] border-2 border-[#fcd34d] rounded-2xl p-4.5 flex items-center justify-between gap-5 shadow-xs">
             <div className="space-y-1.5 flex-1 text-left">
               <span className="text-xs text-[#854d0e] font-extrabold block font-sans tracking-wide">ยอดค้างจ่ายคงเหลือ</span>
               <span className="text-xl sm:text-[23px] font-black text-[#b45309] font-mono tracking-tight leading-none block">
@@ -273,13 +273,13 @@ export const StatusCard: React.FC<StatusCardProps> = ({
           </div>
 
           {/* Customer Shipping Address Box (from Column K) */}
-          <div className="w-full sm:max-w-md bg-[#fafafa] border-2 border-[#e5e7eb] rounded-2xl p-4 flex items-start gap-3.5 shadow-xs transition-all hover:border-[#db5984]/30">
-            {/* Round Pin icon with soft primary/neutral backgrounds */}
-            <div className="w-10 h-10 rounded-full bg-[#fdf2f8] border border-[#fbcfe8] flex items-center justify-center text-[#db5984] shadow-xs shrink-0 pt-0.5">
-              <MapPin className="w-5 h-5 text-[#db5984] fill-[#fdf2f8]" />
+          <div className="w-full sm:max-w-md bg-[#f0f9ff] border-2 border-[#7dd3fc] rounded-2xl p-4 flex items-start gap-3.5 shadow-xs transition-all duration-200 hover:border-[#38bdf8]">
+            {/* Round Pin icon with soft light blue backgrounds */}
+            <div className="w-10 h-10 rounded-full bg-[#e0f2fe] border border-[#bae6fd] flex items-center justify-center text-[#0284c7] shadow-xs shrink-0 pt-0.5">
+              <MapPin className="w-5 h-5 text-[#0284c7] fill-[#e0f2fe]" />
             </div>
             <div className="space-y-1 font-sans text-left flex-1 min-w-0">
-              <span className="text-xs text-stone-500 font-extrabold tracking-wide block">ที่อยู่จัดส่ง</span>
+              <span className="text-xs text-[#0369a1] font-extrabold tracking-wide block">ที่อยู่จัดส่ง</span>
               <p className="text-[12.5px] sm:text-xs font-semibold text-[#1c2a38] break-words leading-relaxed">
                 {shippingAddress.trim() || "ยังไม่มีข้อมูลที่จัดส่งในระบบ"}
               </p>
